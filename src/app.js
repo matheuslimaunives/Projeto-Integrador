@@ -28,9 +28,10 @@ function show(user){
     if(!title)return;
     const el=document.createElement("article");el.className="module";
     el.innerHTML=`<div class="module-icon" aria-hidden="true">${icon}</div><h2>${title}</h2><p>${text}</p><button type="button">Abrir módulo</button>`;
+    if(key!=="comunicacao") el.querySelector("button").textContent="Em desenvolvimento";
     el.querySelector("button").addEventListener("click",()=>{
       if(key==="comunicacao") window.ConectaCommunication.open();
-      else alert(`${title}: módulo inicial preparado para validação.`);
+      else alert(`${title}: recurso em desenvolvimento.`);
     });
     modules.appendChild(el);
   });
@@ -39,12 +40,15 @@ function show(user){
 form.addEventListener("submit",e=>{
   e.preventDefault();
   const fd=new FormData(form),profile=fd.get("profile"),name=String(fd.get("name")).trim();
+  if(!name){document.querySelector("#name").setCustomValidity("Informe um nome válido.");document.querySelector("#name").reportValidity();return}
   let rs=resources();if(!rs.length)rs=defaults[profile]||[];
   const user={name,ageGroup:fd.get("age"),profile,resources:rs};
-  localStorage.setItem(KEY,JSON.stringify(user));show(user);
+  try{localStorage.setItem(KEY,JSON.stringify(user))}catch{alert("Não foi possível salvar o perfil neste navegador. Você pode continuar nesta sessão.")}
+  show(user);
 });
+document.querySelector("#name").addEventListener("input",e=>e.target.setCustomValidity(""));
 document.querySelector("#reset").addEventListener("click",()=>{
-  document.querySelector("#communication").classList.add("hidden");localStorage.removeItem(KEY);form.reset();setup.classList.remove("hidden");home.classList.add("hidden");
+  window.ConectaCommunication.close();try{localStorage.removeItem(KEY)}catch{}form.reset();setup.classList.remove("hidden");home.classList.add("hidden");
   document.body.classList.remove("large-text","large-controls","high-contrast");window.scrollTo(0,0);
 });
-const saved=localStorage.getItem(KEY);if(saved){try{show(JSON.parse(saved))}catch{localStorage.removeItem(KEY)}}
+try{const saved=localStorage.getItem(KEY);if(saved){const user=JSON.parse(saved);if(!user||typeof user.name!=="string"||!Array.isArray(user.resources)||!Object.hasOwn(defaults,user.profile))throw new Error("Perfil inválido");show(user)}}catch{try{localStorage.removeItem(KEY)}catch{}}

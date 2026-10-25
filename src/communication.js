@@ -12,7 +12,7 @@
     ['🛁','Banho','Quero tomar banho','Rotina'],['👕','Roupa','Quero trocar de roupa','Rotina'],['📺','Televisão','Quero assistir televisão','Rotina'],['📞','Telefonar','Quero fazer uma ligação','Rotina']
   ].map((x,i)=>({id:`base-${i}` ,emoji:x[0],label:x[1],phrase:x[2],category:x[3]}));
   const $ = id => document.getElementById(id);
-  let db, recorder, stream, chunks=[], recordedBlob=null, previewUrl=null, activeAudio=null, renderUrls=[];
+  let db, recorder, stream, chunks=[], recordedBlob=null, previewUrl=null, activeAudio=null, renderUrls=[], recordingSession=0;
   const status = msg => { $('commStatus').textContent=msg; };
   function dbOpen(){
     if(db) return Promise.resolve(db);
@@ -59,21 +59,25 @@
   }
   function stopTracks(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
   function resetRecording(){recordedBlob=null;$('listenRecording').disabled=true;$('startRecording').disabled=false;$('stopRecording').disabled=true;$('recordStatus').textContent='';if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null}}
-  function closeEditor(){if(recorder?.state==='recording')recorder.stop();stopTracks();resetRecording();$('editor').classList.add('hidden');$('cardForm').reset()}
+  function closeEditor(){recordingSession++;if(recorder?.state==='recording')recorder.stop();stopTracks();resetRecording();$('editor').classList.add('hidden');$('cardForm').reset()}
   async function startRecording(){
     if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){$('recordStatus').textContent='Gravação indisponível neste navegador. Use HTTPS ou localhost e permita o microfone.';return}
+    const session=++recordingSession;
+    $('startRecording').disabled=true;
     try{
-      stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);
+      const acquired=await navigator.mediaDevices.getUserMedia({audio:true});
+      if(session!==recordingSession){acquired.getTracks().forEach(t=>t.stop());return}
+      stream=acquired;chunks=[];recorder=new MediaRecorder(stream);
       recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
-      recorder.onstop=()=>{recordedBlob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});stopTracks();$('listenRecording').disabled=!recordedBlob.size;$('startRecording').disabled=false;$('stopRecording').disabled=true;$('recordStatus').textContent='Gravação concluída. Você pode ouvi-la antes de salvar.'};
+      recorder.onstop=()=>{if(session!==recordingSession)return;recordedBlob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});stopTracks();$('listenRecording').disabled=!recordedBlob.size;$('startRecording').disabled=false;$('stopRecording').disabled=true;$('recordStatus').textContent='Gravação concluída. Você pode ouvi-la antes de salvar.'};
       recorder.start();$('startRecording').disabled=true;$('stopRecording').disabled=false;$('recordStatus').textContent='Gravando... clique em Parar gravação quando terminar.';
-    }catch{$('recordStatus').textContent='Não foi possível acessar o microfone. Verifique a permissão do navegador.';stopTracks()}
+    }catch{if(session!==recordingSession)return;$('startRecording').disabled=false;$('recordStatus').textContent='Não foi possível acessar o microfone. Verifique a permissão do navegador.';stopTracks()}
   }
   function init(){
     ['Todas',...categories].forEach(c=>{const opt=new Option(c,c);$('categoryFilter').add(opt)});
     categories.forEach(c=>$('cardCategory').add(new Option(c,c)));
     $('categoryFilter').addEventListener('change',render);
-    $('backHome').addEventListener('click',()=>{$('communication').classList.add('hidden');$('home').classList.remove('hidden');closeEditor()});
+    $('backHome').addEventListener('click',()=>{close();$('home').classList.remove('hidden')});
     $('addCard').addEventListener('click',()=>{$('editor').classList.remove('hidden');$('cardLabel').focus()});
     $('cancelCard').addEventListener('click',closeEditor);
     $('startRecording').addEventListener('click',startRecording);
@@ -88,5 +92,6 @@
     });
   }
   document.addEventListener('DOMContentLoaded',init);
-  window.ConectaCommunication={open:async()=>{$('home').classList.add('hidden');$('communication').classList.remove('hidden');$('editor').classList.add('hidden');await render();$('commTitle').focus?.();window.scrollTo(0,0)}};
+  function close(){closeEditor();if(activeAudio){activeAudio.pause();activeAudio.src='';activeAudio=null}if('speechSynthesis' in window)speechSynthesis.cancel();renderUrls.forEach(URL.revokeObjectURL);renderUrls=[];$('communication').classList.add('hidden')}
+  window.ConectaCommunication={close,open:async()=>{$('home').classList.add('hidden');$('communication').classList.remove('hidden');$('editor').classList.add('hidden');await render();$('commTitle').focus?.();window.scrollTo(0,0)}};
 })();

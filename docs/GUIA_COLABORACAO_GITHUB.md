@@ -1,37 +1,43 @@
-# Guia de colaboração no GitHub
+# Continuidade pelo GitHub
 
-Este guia complementa o README e ajuda o grupo a manter um histórico de desenvolvimento gradual e colaborativo.
+A branch adotada é `main`. Preserve a `master` histórica; ela tem origem independente e não deve ser mesclada automaticamente.
 
-## Fluxo básico
+## Iniciar uma cópia nova
 
 ```bash
-git clone URL_DO_REPOSITORIO
-cd Conecta_Vida_IA
-git pull
-
-# realizar e testar a tarefa
-
-git status
-git add .
-git commit -m "Descrição clara da alteração"
-git push
+git clone https://github.com/rua124164/Projeto-Integrador.git
+cd Projeto-Integrador
+git status --short --branch
+git remote -v
+git switch main
 ```
 
-## Boas práticas
+Antes de atualizar uma cópia existente, confira o status e preserve alterações locais. Com a árvore limpa:
 
-- Cada integrante deve utilizar seu próprio usuário do GitHub.
-- O commit deve representar trabalho efetivamente realizado por quem o registra.
-- Fazer commits ao longo do desenvolvimento, e não apenas no encerramento da quinzena.
-- Manter as alterações relacionadas a uma tarefa compreensível.
-- Antes de iniciar uma nova tarefa, atualizar a cópia local do repositório.
+```bash
+git pull --ff-only origin main
+```
 
-## Exemplos de mensagens
+Se o comando falhar, examine a divergência antes de continuar. Não use reset destrutivo nem force push.
 
-- `Implementação do cadastro do usuário`
-- `Criação dos perfis iniciais`
-- `Implementação da seleção de recursos de acessibilidade`
-- `Ajuste da interface para usuários idosos`
-- `Correção da validação do formulário`
-- `Atualização da documentação do README`
+## Registrar uma tarefa real
 
-Evitar mensagens genéricas como `Atualização`, `Teste`, `Alterações` e `Final`.
+Teste a alteração e revise cada arquivo antes de adicioná-lo:
+
+```bash
+git status --short
+git diff
+git add caminho/do/arquivo
+git diff --cached
+git commit -m "Descrição específica da alteração"
+```
+
+O caminho é um exemplo: substitua pelo arquivo desejado. Faça commits pequenos e descritivos, com autoria real. Não altere o histórico para simular participação.
+
+Somente após revisão e autorização para envio:
+
+```bash
+git push origin main
+```
+
+Não publique no GitHub Pages sem autorização específica.

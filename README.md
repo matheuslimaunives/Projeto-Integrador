@@ -75,19 +75,21 @@ Recursos relacionados a voz, câmera, Libras, inteligência artificial e automa�
 ## Estrutura do repositório
 
 ```text
-Conecta_Vida_IA/
+Projeto-Integrador/
 ├── index.html
 ├── README.md
 ├── .gitignore
 ├── docs/
 │   └── GUIA_COLABORACAO_GITHUB.md
 └── src/
+    ├── communication.js
     ├── app.js
     └── style.css
 ```
 
 - `index.html`: página principal;
-- `src/app.js`: lógica da aplicação;
+- `src/app.js`: cadastro e personalização;
+- `src/communication.js`: cartões, voz, imagens e gravações locais;
 - `src/style.css`: estilos e recursos visuais;
 - `README.md`: documentação principal;
 - `docs/`: documentação de apoio ao desenvolvimento;
@@ -103,22 +105,23 @@ Esta primeira versão não possui dependências externas.
 
 - Windows, Linux ou macOS;
 - navegador web atualizado;
-- Git, caso seja utilizado o processo de clonagem.
+- Git, caso seja utilizado o processo de clonagem;
+- Python 3 para o servidor local de exemplo (ou outro servidor HTTP local).
 
 ### Opção 1 – Download
 
-Baixe o projeto e abra o arquivo `index.html` em um navegador.
+Baixe e extraia o projeto. Para testar todos os recursos, execute um servidor local conforme as instruções abaixo.
 
 ### Opção 2 – Git
 
 ```bash
-git clone URL_DO_REPOSITORIO
-cd Conecta_Vida_IA
+git clone https://github.com/rua124164/Projeto-Integrador.git
+cd Projeto-Integrador
 ```
 
-Depois, abra `index.html` no navegador.
+Depois, execute `python -m http.server 8000` na pasta do projeto e abra `http://localhost:8000`.
 
-> Substitua `URL_DO_REPOSITORIO` pelo endereço público do repositório após sua criação no GitHub.
+A branch de continuidade é `main`. A aplicação fica na raiz do repositório.
 
 ## Como testar a aplicação
 
@@ -190,11 +193,9 @@ Recursos disponíveis: grade de cartões ilustrados por categoria, reprodução 
 
 Próximas melhorias previstas:
 
-- categorias de comunicação;
-- imagens;
-- frases prontas;
-- montagem de mensagens;
-- reprodução da mensagem.
+- montagem de mensagens com múltiplos cartões;
+- validação de usabilidade e acessibilidade com usuários;
+- melhorias orientadas pelos resultados dos testes.
 
 ### Camada 3 – Recursos para pessoas idosas
 
@@ -216,21 +217,21 @@ A IA será incorporada posteriormente, após a validação dos fluxos essenciais
 
 ## Status atual
 
-**Primeira base funcional criada, com cadastro de usuário, perfis iniciais, seleção de recursos de acessibilidade e interface personalizada.**
+**Protótipo com cadastro local, personalização e primeira versão de comunicação assistida. Os demais módulos permanecem em desenvolvimento; a validação com usuários está pendente.**
 
 ## Informações para envio
 
 **Grupo:** 14
 
-**Link do GitHub:** `[INSERIR URL PÚBLICA DO REPOSITÓRIO]`
+**Link do GitHub:** https://github.com/rua124164/Projeto-Integrador
 
-**Status atual:** Primeira base funcional criada, com cadastro de usuário, perfis iniciais, seleção de recursos de acessibilidade e interface personalizada.
+**Status atual:** Protótipo com personalização e comunicação assistida; validação com usuários pendente.
 
 > Antes do envio, verificar se o repositório está **Público**. Caso o repositório precise permanecer privado, verificar a orientação da UNIVESP e adicionar o usuário indicado pelo professor como colaborador.
 
 ## Próxima etapa
 
-A próxima etapa de desenvolvimento será o módulo de **Comunicação Assistida**, mantendo o desenvolvimento incremental e registrando no GitHub a participação dos integrantes por meio de commits próprios e descritivos.
+A próxima etapa é validar a comunicação assistida com os públicos iniciais, corrigir os problemas observados e registrar evidências dos testes. Os demais módulos continuam em desenvolvimento.
 
 
 ## Testar o módulo de Comunicação Assistida
@@ -249,3 +250,11 @@ python -m http.server 8000
 ```
 
 Abra `http://localhost:8000`. O GitHub Pages também utiliza HTTPS. O armazenamento é local: dados e áudios não são sincronizados entre aparelhos e podem desaparecer ao limpar os dados do navegador. Para esta etapa, os pictogramas padrão são representados por emojis; imagens personalizadas são carregadas pelo usuário.
+
+## Regularização e continuidade
+
+- Branch de trabalho adotada: `main`; a `master` histórica permanece preservada.
+- Grupo confirmado com sete integrantes, conforme a lista acima. RAs ainda precisam ser preenchidos com os dados oficiais.
+- Módulos de orientações em áudio, vibração e ajuda são demonstrativos; o botão informa “Em desenvolvimento”.
+- O cadastro é um perfil local de protótipo, sem autenticação ou sincronização. Reconfigurar remove o perfil, mas preserva cartões do navegador.
+- Consulte [o roteiro de validação](docs/VALIDACAO.md) e [os próximos passos](docs/PROXIMOS_PASSOS.md).
