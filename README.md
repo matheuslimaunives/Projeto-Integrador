@@ -12,7 +12,7 @@ O desenvolvimento será realizado **em camadas**, priorizando inicialmente os re
 
 ## Grupo e integrantes
 
-**Grupo:** 14  
+**Grupo:** 22  
 **Curso:** Engenharia da Computação  
 **Disciplina:** Projeto Integrador em Computação II  
 **Instituição:** Universidade Virtual do Estado de São Paulo – UNIVESP  
@@ -221,7 +221,7 @@ A IA será incorporada posteriormente, após a validação dos fluxos essenciais
 
 ## Informações para envio
 
-**Grupo:** 14
+**Grupo:** 22
 
 **Link do GitHub:** https://github.com/rua124164/Projeto-Integrador
 
